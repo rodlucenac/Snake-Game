@@ -27,6 +27,7 @@ char *corCobra = VERDE;
 char *corComida = AMARELO;
 
 FILE *fptr;
+FILE *fp;
 
 typedef struct Segmento {
   int x;
@@ -56,7 +57,7 @@ void gerarComidaEmLocalAleatorio(Comida *comida);
 void exibirJogo(Cobra *cobra, Comida *comida);
 bool colidiu(Cobra *cobra);
 void configuracoes();
-void salvarPontuacao(nomeJogador, contador);
+void salvarPontuacao(const char* nomeJogador, int contador);
 void mostrarRanking();
 
 int main() {
@@ -67,7 +68,7 @@ int main() {
   fgets(nomeJogador, 50, stdin);
   nomeJogador[strcspn(nomeJogador, "\n")] = 0;
 
-  screeninit(0);
+  screenInit(0);
 
   printf("Escolha uma dificuldade: \n");
   printf("1 - Super fácil (1.0x) \n");
@@ -76,7 +77,7 @@ int main() {
   printf("4 - Difícil (2.4x) \n");
   printf("5 - Impossível (2.9x) \n");
   printf("6 - Configurações\n");
-  printf("7- Mostrar Ranking\n");
+  printf("7 - Mostrar Ranking\n");
   printf("8 - Sair\n");
   printf("Pressione a tecla correspondente.\n");
 
@@ -109,7 +110,7 @@ int main() {
       case '6':
         configuracoes();
         break;
-      case 7:
+      case '7':
         mostrarRanking();
         break;
       case '8':
@@ -214,6 +215,7 @@ int main() {
                 break;
               }
               if (!perdeuJogo) {
+                salvarPontuacao(nomeJogador, contador);
                 break;
               }
             }
@@ -333,26 +335,40 @@ void configuracoes() {
   } while (escolha != '5');
 }
 
-void salvarPontuacao(const char* nome, int pontuacao) {
-    FILE *fp = fopen("ranking.txt", "a");
-    if (fp != NULL) {
-        fprintf(fp, "%s %d\n", nome, pontuacao);
-        fclose(fp);
-    } else {
-        printf("Erro ao abrir arquivo de ranking.\n");
-    }
-}
-
-void mostrarRanking() {
-  FILE *fp = fopen("ranking.txt", "r");
-  char linha[100];
+void salvarPontuacao(const char* nomeJogador, int contador) {
+  FILE *fp = fopen("ranking.txt", "a");
   if (fp != NULL) {
-    printf("Ranking:\n");
-    while (fgets(linha, sizeof(linha), fp)) {
-        printf("%s", linha);
-    }
+    fprintf(fp, "%s %d\n", nomeJogador, contador);
     fclose(fp);
   } else {
     printf("Erro ao abrir arquivo de ranking.\n");
+  }
+}
+
+void mostrarRanking() {
+  screenInit(0);
+  FILE *fp = fopen("ranking.txt", "r");
+  char linha[100];
+
+  if (fp != NULL) {
+    printf("Ranking:\n");
+    while (fgets(linha, sizeof(linha), fp)) {
+      printf("%s", linha);
+    }
+    fclose(fp);
+    printf("\nPressione ESC para voltar ao menu principal.\n");
+    while (1) {
+      if (keyhit()) {
+        int tecla = readch();
+        if (tecla == 27) {
+          break;
+        }
+      }
+    }
+  } else {
+    printf("Erro ao abrir arquivo de ranking.\n");
+    printf("Pressione qualquer tecla para voltar.\n");
+    while (!keyhit()) {}
+    readch();
   }
 }
