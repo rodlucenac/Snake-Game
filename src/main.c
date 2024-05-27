@@ -67,9 +67,7 @@ int main() {
   printf("Por favor, insira seu nome: ");
   fgets(nomeJogador, 50, stdin);
   nomeJogador[strcspn(nomeJogador, "\n")] = 0;
-
   screenInit(0);
-
   printf("Escolha uma dificuldade: \n");
   printf("1 - Super fácil (1.0x) \n");
   printf("2 - Fácil (1.7x) \n");
@@ -82,11 +80,9 @@ int main() {
   printf("Pressione a tecla correspondente.\n");
 
   while (1) {
-
     if (keyhit()) {
       char tecla = readch();
-      switch (tecla)
-      {
+      switch (tecla) {
       case '1':
         velocidadeCobra = 250000;
         iniciarJogo = true;
@@ -120,14 +116,13 @@ int main() {
     }
 
     if (iniciarJogo) {
-
       srand(time(NULL));
       screenInit(1);
 
       Cobra cobra;
       Comida comida;
 
-      cobra.cabeca = (Segmento *)malloc(sizeof(Segmento));
+      cobra.cabeca = (Segmento*)malloc(sizeof(Segmento));
       cobra.cabeca->x = 10;
       cobra.cabeca->y = 10;
       cobra.cabeca->proximo = NULL;
@@ -138,7 +133,6 @@ int main() {
       gerarComidaEmLocalAleatorio(&comida);
 
       while (iniciarJogo) {
-
         if (keyhit() && !perdeuJogo) {
           int tecla = readch();
           int novo_dx = cobra.dx;
@@ -165,7 +159,7 @@ int main() {
             iniciarJogo = false;
             break;
           }
-          if (!(novo_dx == -cobra.dx && novo_dy == -cobra.dy)) {
+          if (!(novo_dx == -cobra.dx && novo_dy == -cobra.dy)){
             cobra.dx = novo_dx;
             cobra.dy = novo_dy;
           }
@@ -175,7 +169,7 @@ int main() {
         exibirJogo(&cobra, &comida);
         usleep(velocidadeCobra);
 
-        if (colidiu(&cobra)) {
+        if (colidiu(&cobra)){
           perdeuJogo = true;
           screenInit(0);
           fptr = fopen("ascii.txt", "r");
@@ -190,7 +184,6 @@ int main() {
 
           while (1) {
             if (keyhit()) {
-
               char tecla = readch();
               screenInit(0);
               switch (tecla) {
@@ -368,7 +361,8 @@ void mostrarRanking() {
   } else {
     printf("Erro ao abrir arquivo de ranking.\n");
     printf("Pressione qualquer tecla para voltar.\n");
-    while (!keyhit()) {}
+    while (!keyhit()) {
+    }
     readch();
   }
 }
