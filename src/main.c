@@ -45,15 +45,29 @@ typedef struct Comida {
   int y;
 } Comida;
 
+typedef struct Ranking {
+  char nome[50];
+  int pontuacao;
+} Ranking;
+
+
 void moverCobra(Cobra *cobra, int dx, int dy, Comida *comida);
 void gerarComidaEmLocalAleatorio(Comida *comida);
 void exibirJogo(Cobra *cobra, Comida *comida);
 bool colidiu(Cobra *cobra);
 void configuracoes();
+void salvarPontuacao(nomeJogador, contador);
+void mostrarRanking();
 
 int main() {
   keyboardInit();
   screenInit(0);
+  char nomeJogador[50];
+  printf("Por favor, insira seu nome: ");
+  fgets(nomeJogador, 50, stdin);
+  nomeJogador[strcspn(nomeJogador, "\n")] = 0;
+
+  screeninit(0);
 
   printf("Escolha uma dificuldade: \n");
   printf("1 - Super fácil (1.0x) \n");
@@ -62,7 +76,8 @@ int main() {
   printf("4 - Difícil (2.4x) \n");
   printf("5 - Impossível (2.9x) \n");
   printf("6 - Configurações\n");
-  printf("7 - Sair\n");
+  printf("7- Mostrar Ranking\n");
+  printf("8 - Sair\n");
   printf("Pressione a tecla correspondente.\n");
 
   while (1) {
@@ -94,7 +109,10 @@ int main() {
       case '6':
         configuracoes();
         break;
-      case '7':
+      case 7:
+        mostrarRanking();
+        break;
+      case '8':
         keyboardDestroy();
         return 0;
       }
@@ -278,6 +296,7 @@ bool colidiu(Cobra *cobra) {
 }
 
 void configuracoes() {
+  screenInit(0);
   int escolha;
   printf("Configurações do Jogo:\n");
   printf("1 - Caractere da Comida (Atual: %c)\n", comidaChar);
@@ -312,4 +331,28 @@ void configuracoes() {
     }
     printf("Configuração atualizada. Pressione qualquer tecla para continuar.\n");
   } while (escolha != '5');
+}
+
+void salvarPontuacao(const char* nome, int pontuacao) {
+    FILE *fp = fopen("ranking.txt", "a");
+    if (fp != NULL) {
+        fprintf(fp, "%s %d\n", nome, pontuacao);
+        fclose(fp);
+    } else {
+        printf("Erro ao abrir arquivo de ranking.\n");
+    }
+}
+
+void mostrarRanking() {
+  FILE *fp = fopen("ranking.txt", "r");
+  char linha[100];
+  if (fp != NULL) {
+    printf("Ranking:\n");
+    while (fgets(linha, sizeof(linha), fp)) {
+        printf("%s", linha);
+    }
+    fclose(fp);
+  } else {
+    printf("Erro ao abrir arquivo de ranking.\n");
+  }
 }
