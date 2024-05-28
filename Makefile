@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -g -I./include
-SRC = $(wildcard ./src/*.c)
+SRC = $(wildcard ./jogo/*.c)
 OBJ = $(SRC:.c=.o)
 EXEC = snake
 
