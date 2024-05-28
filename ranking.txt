@@ -18,3 +18,4 @@ rodrigo 2
 rodrigo 0
 caio 0
 caio 0
+caio 3

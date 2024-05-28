@@ -48,8 +48,8 @@ int velocidade = 250000;
 bool comeuAlimento = false;
 int pontos = 0;
 
-char charAlimento = '*';
-char charSerpente = 'O';
+char charAlimento = '&';
+char charSerpente = '0';
 char *corSerpente = VERDE;
 char *corAlimento = AMARELO;
 
@@ -113,7 +113,7 @@ void moverSerpente(Serpente *serpente, Alimento *alimento) {
 
 void desenharJogo(Serpente *serpente, Alimento *alimento) {
   screenInit(1);
-  printf("  W-Frente  S-Trás  A-Esquerda  D-Direita  ESC-Sair\t Pontuação: %d", pontos);
+  printf("Pontuação: %d", pontos);
 
   Nodo *nodo = serpente->inicio;
   while (nodo != NULL) {
@@ -201,7 +201,7 @@ void configuracoes() {
         return;
     }
     printf("Configuração atualizada. Pressione qualquer tecla para continuar.\n");
-    readch(); // Wait for any key press before returning to the menu
+    readch();
   }
 }
 

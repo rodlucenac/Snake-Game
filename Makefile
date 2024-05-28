@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -g -I./include
 SRC = $(wildcard ./src/*.c)
 OBJ = $(SRC:.c=.o)
-EXEC = snake_game
+EXEC = snake
 
 $(EXEC): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $^
