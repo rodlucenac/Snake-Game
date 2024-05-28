@@ -26,7 +26,6 @@ char cobraChar = 'O';
 char *corCobra = VERDE;
 char *corComida = AMARELO;
 
-FILE *fptr;
 FILE *fp;
 
 typedef struct Segmento {
@@ -51,7 +50,6 @@ typedef struct Ranking {
   int pontuacao;
 } Ranking;
 
-
 void moverCobra(Cobra *cobra, int dx, int dy, Comida *comida);
 void gerarComidaEmLocalAleatorio(Comida *comida);
 void exibirJogo(Cobra *cobra, Comida *comida);
@@ -59,6 +57,7 @@ bool colidiu(Cobra *cobra);
 void configuracoes();
 void salvarPontuacao(const char* nomeJogador, int contador);
 void mostrarRanking();
+void menuPrincipal();
 
 int main() {
   keyboardInit();
@@ -67,17 +66,8 @@ int main() {
   printf("Por favor, insira seu nome: ");
   fgets(nomeJogador, 50, stdin);
   nomeJogador[strcspn(nomeJogador, "\n")] = 0;
-  screenInit(0);
-  printf("Escolha uma dificuldade: \n");
-  printf("1 - Super fácil (1.0x) \n");
-  printf("2 - Fácil (1.7x) \n");
-  printf("3 - Médio (2.0x) \n");
-  printf("4 - Difícil (2.4x) \n");
-  printf("5 - Impossível (2.9x) \n");
-  printf("6 - Configurações\n");
-  printf("7 - Mostrar Ranking\n");
-  printf("8 - Sair\n");
-  printf("Pressione a tecla correspondente.\n");
+
+  menuPrincipal();
 
   while (1) {
     if (keyhit()) {
@@ -105,9 +95,11 @@ int main() {
         break;
       case '6':
         configuracoes();
+        menuPrincipal();
         break;
       case '7':
         mostrarRanking();
+        menuPrincipal();
         break;
       case '8':
         keyboardDestroy();
@@ -172,22 +164,11 @@ int main() {
         if (colidiu(&cobra)){
           perdeuJogo = true;
           screenInit(0);
-          fptr = fopen("ascii.txt", "r");
-          char texto = fgetc(fptr);
-          while (texto != EOF) {
-            printf("%c", texto);
-            texto = fgetc(fptr);
-          }
-          fclose(fptr);
-
           printf("\n\n Você deseja continuar jogando? (s/n)\n");
-
           while (1) {
             if (keyhit()) {
               char tecla = readch();
-              screenInit(0);
-              switch (tecla) {
-              case 's':
+              if (tecla == 's') {
                 cobra.cabeca = (Segmento *)malloc(sizeof(Segmento));
                 cobra.cabeca->x = 10;
                 cobra.cabeca->y = 10;
@@ -202,25 +183,36 @@ int main() {
 
                 contador = 0;
                 break;
-              case 'n':
+              } else if (tecla == 'n') {
                 perdeuJogo = false;
                 iniciarJogo = false;
-                break;
-              }
-              if (!perdeuJogo) {
                 salvarPontuacao(nomeJogador, contador);
+                menuPrincipal();
                 break;
               }
             }
           }
         }
       }
-
       screenDestroy();
-      keyboardDestroy();
-      return 0;
     }
   }
+  keyboardDestroy();
+  return 0;
+}
+
+void menuPrincipal() {
+  screenInit(0);
+  printf("Escolha dificuldade: \n");
+  printf("1 - Super fácil\n");
+  printf("2 - Fácil\n");
+  printf("3 - Médio\n");
+  printf("4 - Difícil\n");
+  printf("5 - Impossível\n");
+  printf("6 - Configurações\n");
+  printf("7 - Mostrar Ranking\n");
+  printf("8 - Sair\n");
+  printf("Pressione a tecla correspondente.\n");
 }
 
 void moverCobra(Cobra *cobra, int dx, int dy, Comida *comida) {
@@ -274,8 +266,7 @@ void exibirJogo(Cobra *cobra, Comida *comida) {
 }
 
 bool colidiu(Cobra *cobra) {
-  if (cobra->cabeca->x <= 1 || cobra->cabeca->x >= MAXX - 1 || cobra->cabeca->y <= 1 || cobra->cabeca->y >= MAXY - 1)
-  {
+  if (cobra->cabeca->x <= 1 || cobra->cabeca->x >= MAXX - 1 || cobra->cabeca->y <= 1 || cobra->cabeca->y >= MAXY - 1) {
     return true;
   }
 
@@ -300,7 +291,7 @@ void configuracoes() {
   printf("4 - Cor da Comida (Atual: %s)\n", strcmp(corComida, AMARELO) == 0 ? "Amarelo" : (strcmp(corComida, LARANJA) == 0 ? "Laranja" : "Azul"));
   printf("5 - Voltar ao menu principal\n");
 
-  do {
+  while (1) {
     escolha = readch();
     switch (escolha) {
       case '1':
@@ -325,7 +316,7 @@ void configuracoes() {
         return;
     }
     printf("Configuração atualizada. Pressione qualquer tecla para continuar.\n");
-  } while (escolha != '5');
+  }
 }
 
 void salvarPontuacao(const char* nomeJogador, int contador) {
@@ -354,7 +345,7 @@ void mostrarRanking() {
       if (keyhit()) {
         int tecla = readch();
         if (tecla == 27) {
-          break;
+          return; // Retornar ao menu principal
         }
       }
     }
