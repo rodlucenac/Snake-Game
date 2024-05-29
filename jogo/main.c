@@ -143,27 +143,31 @@ bool verificarColisao(Serpente *serpente) {
 }
 
 void configuracoes() {
-  screenInit(0);
   int escolha;
-  printf("Configurações do Jogo:\n");
-  printf("1 - Caractere da Comida (Atual: %c)\n", charAlimento);
-  printf("2 - Caractere da Serpente (Atual: %c)\n", charSerpente);
-  printf("3 - Cor da Serpente (Atual: %s%c%s)\n", corSerpente, 'O', RESET);
-  printf("4 - Cor da Comida (Atual: %s%c%s)\n", corAlimento, '*', RESET);
-  printf("5 - Voltar ao menu principal\n");
 
   while (1) {
+    screenInit(0);
+    printf("Configurações do Jogo:\n");
+    printf("1 - Caractere da Comida (Atual: %c)\n", charAlimento);
+    printf("2 - Caractere da Serpente (Atual: %c)\n", charSerpente);
+    printf("3 - Cor da Serpente (Atual: %s%c%s)\n", corSerpente, 'O', RESET);
+    printf("4 - Cor da Comida (Atual: %s%c%s)\n", corAlimento, '*', RESET);
+    printf("5 - Voltar ao menu principal\n");
+    
     escolha = readch();
     switch (escolha) {
       case '1':
+        screenInit(0);
         printf("Escolha * , $ ou & para a comida: ");
         charAlimento = readch();
         break;
       case '2':
+        screenInit(0);
         printf("Escolha O, @ ou 0 para a serpente: ");
         charSerpente = readch();
         break;
       case '3':
+        screenInit(0);
         printf("Escolha a cor da serpente:\n");
         printf("1 - Preto\n2 - Vermelho\n3 - Verde\n4 - Amarelo\n5 - Azul\n6 - Magenta\n7 - Ciano\n8 - Branco\n9 - Cinza\n0 - Vermelho Claro\n");
         escolha = readch();
@@ -181,6 +185,7 @@ void configuracoes() {
         }
         break;
       case '4':
+        screenInit(0);
         printf("Escolha a cor da comida:\n");
         printf("1 - Preto\n2 - Vermelho\n3 - Verde\n4 - Amarelo\n5 - Azul\n6 - Magenta\n7 - Ciano\n8 - Branco\n9 - Cinza\n0 - Vermelho Claro\n");
         escolha = readch();
